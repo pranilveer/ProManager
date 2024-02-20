@@ -1,10 +1,18 @@
+import React from 'react';
 import './App.css';
+import { Route, Routes, Navigate, useNavigate, BrowserRouter as Router, BrowserRouter } from "react-router-dom";
+import LoginSignup from './pages/LoginSignup/LoginSignUp';
 
 function App() {
   return (
-    <div className="App">
+    <BrowserRouter>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<LoginSignup />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
 
-    </div>
   );
 }
 

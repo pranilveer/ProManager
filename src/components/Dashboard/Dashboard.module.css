@@ -1,0 +1,6 @@
+.dashboardScreen {
+    display: flex;
+    height: 100vh;
+    width: 80vw;
+    flex-direction: column;
+  }

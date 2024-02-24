@@ -41,23 +41,6 @@ function SettingContent() {
         } finally {
             setIsLoading(false);
         }
-
-        // try {
-        //     const response = await axios.put(`${BACKEND_URL}/users/profile`, {
-        //         oldPassword,
-        //         newPassword,
-        //     });
-
-        //     toast.success(response.data.message);
-        // } catch (error) {
-        //     if (error.response && error.response.status === 401) {
-        //         toast.error("Old password is incorrect");
-        //     } else {
-        //         toast.error("An error occurred");
-        //     }
-        // } finally {
-        //     setIsLoading(false);
-        // }
     };
 
     return (

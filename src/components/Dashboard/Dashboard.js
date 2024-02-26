@@ -3,6 +3,7 @@ import axios from "axios";
 import styles from "./Dashboard.module.css";
 import { BACKEND_URL } from "../../constants/baseurl";
 import addLogo from "../../assets/images/add.svg"
+import ToDoModal from "../ToDoModal/ToDoModal";
 
 function DashboardContent() {
     const [userName, setUserName] = useState("");
@@ -77,11 +78,7 @@ function DashboardContent() {
                     </div>
                 </div>
             </div>
-            {isModalOpen && (
-                <div className={styles.modalOvarlay}>
-                    Modal
-                </div>
-            )}
+            <ToDoModal isOpen={isModalOpen} closeModal={toggleModal} />
         </>
     );
 }

@@ -55,7 +55,7 @@
   width: 85vw;
   height: 100%;
   display: inline-flex;
-  overflow: auto;
+  overflow-x: auto;
   white-space: nowrap;
 
 }

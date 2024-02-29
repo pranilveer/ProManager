@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { BACKEND_URL } from "../../constants/baseurl";
@@ -8,40 +8,98 @@ import userIcon from "../../assets/images/profile.svg"
 import lockIcon from "../../assets/images/lock.svg"
 
 function SettingContent() {
-    const [name, setName] =useState("");
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [userName, setUserName] = useState("");
 
     const handleUpdatePassword = async () => {
         setIsLoading(true);
+        if (newPassword === oldPassword) {
+            toast.error("New & Old password not be same!", {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+            });
+            setIsLoading(false);
+            return;
+        }
+        if(!newPassword || !oldPassword){
+            toast.error("Please fill in all the fields", {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+            });
+            setIsLoading(false);
+            return;
+        }
 
         try {
-            const jwtToken = localStorage.getItem("userToken");
-            console.log(jwtToken);
-    
-            const response = await fetch(`${BACKEND_URL}/users/profile`, {
-                method: 'PUT',
-                headers: {
-                    'authorization': `Bearer ${jwtToken}`
-                },
-                body: JSON.stringify({ oldPassword, newPassword })
-            });
-    
-            const data = await response.json();
-    
-            if (response.ok) {
-                toast.success(data.message);
-            } else {
-                toast.error(data.error || "An error occurred");
-            }
+            const token = localStorage.getItem('userToken'); // Get the JWT token from localStorage
+            const response = await axios.put(
+                `${BACKEND_URL}/users/profile`,
+                { oldPassword, newPassword },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}` // Set the Authorization header with the token
+                    }
+                }
+            );
+            toast.success("Password Updated Successfully", {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+            });            
+            setNewPassword("");
+            setOldPassword("");
         } catch (error) {
-            console.error("Error:", error);
-            toast.error("An error occurred");
+            // toast.error(error.response.data.error || 'Failed to update password')
+            if (error.response.status === 401) {
+                toast.error("Old password is incorrect", {
+                    position: "top-center",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    draggable: true,
+                });
+                setIsLoading(false);
+                return;
+            }
+            toast.error(error.response.data.message, {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+            });
         } finally {
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            const userId = localStorage.getItem("userId");
+            try {
+                const token = localStorage.getItem('userToken'); // Get the JWT token from localStorage
+                const response = await axios.get(`${BACKEND_URL}/users/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}` // Set the Authorization header with the token
+                    }
+                });
+                setUserName(response.data.user.name)
+            } catch (error) {
+                console.error("Error fetching user name:", error);
+            }
+        };
+        fetchUserData();
+    }, []);
 
     return (
         <div className={styles.settingScreen}>
@@ -55,10 +113,10 @@ function SettingContent() {
                         type="Name"
                         id="Name"
                         name="Name"
-                        value={name}
+                        value={userName}
                         placeholder="Name"
-                        onChange={(e) => setName(e.target.value)}
                         className={styles.formInput}
+                        readOnly
                     />
                 </div>
 

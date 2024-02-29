@@ -43,6 +43,7 @@ function DashboardContent() {
                 const response = await axios.get(`${BACKEND_URL}/tasks`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
+                console.log("response here", response.data)
                 setTasks(response.data.tasks);
                 countStatuses(response.data.tasks); 
                 countPriorities(response.data.tasks);
@@ -52,6 +53,24 @@ function DashboardContent() {
         };
 
         fetchTasks();
+    }, []);
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            const userId = localStorage.getItem("userId");
+            try {
+                const token = localStorage.getItem('userToken'); // Get the JWT token from localStorage
+                const response = await axios.get(`${BACKEND_URL}/users/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}` // Set the Authorization header with the token
+                    }
+                });
+                setUserName(response.data.user.name)
+            } catch (error) {
+                console.error("Error fetching user name:", error);
+            }
+        };
+        fetchUserData();
     }, []);
 
     // Count the number of tasks with each status

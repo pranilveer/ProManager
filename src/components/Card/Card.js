@@ -6,17 +6,15 @@ import collapseUpIcon from "../../assets/images/collapseup.svg"
 import { BACKEND_URL } from '../../constants/baseurl';
 import axios from 'axios';
 
-
 const Card = ({ task }) => {
-    const { _id, title, priority, checklist: taskChecklist, dueDate } = task; // Renamed checklist to taskChecklist
+    const { title, priority, status, checklist: taskChecklist, dueDate } = task; // Renamed checklist to taskChecklist
     const [showOptions, setShowOptions] = useState(false);
+    const [checklist, setChecklist] = useState([]);
     const [showChecklist, setShowChecklist] = useState(false);
+    const [collapseIcon, setCollapseIcon] = useState(collapseDownIcon);
 
     const checkedTasks = taskChecklist.filter(task => task.isChecked).length; // Updated to use taskChecklist
     const totalTasks = taskChecklist.length; // Updated to use taskChecklist
-    const [collapseIcon, setCollapseIcon] = useState(collapseDownIcon);
-    const [cardStatus, setCardStatus] = useState('todo'); // State variable for card status
-
 
     const toggleOptions = () => {
         setShowOptions(!showOptions);
@@ -43,6 +41,7 @@ const Card = ({ task }) => {
     const handleChecklistToggle = async (index) => {
         const updatedChecklist = [...taskChecklist]; // Updated to use taskChecklist
         updatedChecklist[index].isChecked = !updatedChecklist[index].isChecked;
+        setChecklist(updatedChecklist);
 
         try {
             const token = localStorage.getItem('userToken');
@@ -54,26 +53,67 @@ const Card = ({ task }) => {
                     Authorization: `Bearer ${token}`,
                 },
             });
+            setChecklist(updatedChecklist);
             console.log(response.data); // Log the response from the backend
         } catch (error) {
             console.error('Error updating task:', error);
         }
     };
 
-    const handleStatusChange = async (status) => {
+    const handleStatusChange = async (newStatus) => {
         try {
             const token = localStorage.getItem('userToken');
-            const response = await axios.put(`${BACKEND_URL}/tasks/${_id}`, {
-                status: status,
+            const taskId = task._id;
+            const response = await axios.put(`${BACKEND_URL}/tasks/${taskId}/status`, {
+                status: newStatus,
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
             console.log(response.data); // Log the response from the backend
-            setCardStatus(status);
         } catch (error) {
             console.error('Error updating task status:', error);
+        }
+    };
+
+    // Function to render the mode buttons based on the current status
+    const renderModeButtons = () => {
+        switch (status) {
+            case 'todo':
+                return (
+                    <>
+                        <button onClick={() => handleStatusChange('backlog')}>Backlog</button>
+                        <button onClick={() => handleStatusChange('progress')}>In Progress</button>
+                        <button onClick={() => handleStatusChange('done')}>Done</button>
+                    </>
+                );
+            case 'backlog':
+                return (
+                    <>
+                        <button onClick={() => handleStatusChange('todo')}>To Do</button>
+                        <button onClick={() => handleStatusChange('progress')}>In Progress</button>
+                        <button onClick={() => handleStatusChange('done')}>Done</button>
+                    </>
+                );
+            case 'progress':
+                return (
+                    <>
+                        <button onClick={() => handleStatusChange('backlog')}>Backlog</button>
+                        <button onClick={() => handleStatusChange('todo')}>To Do</button>
+                        <button onClick={() => handleStatusChange('done')}>Done</button>
+                    </>
+                );
+            case 'done':
+                return (
+                    <>
+                        <button onClick={() => handleStatusChange('backlog')}>Backlog</button>
+                        <button onClick={() => handleStatusChange('todo')}>To Do</button>
+                        <button onClick={() => handleStatusChange('progress')}>In Progress</button>
+                    </>
+                );
+            default:
+                return null;
         }
     };
 
@@ -108,7 +148,7 @@ const Card = ({ task }) => {
                     <img src={collapseIcon} alt='collapse icon' />
                 </div>
             </div>
-            {showChecklist && ( // Conditionally render the checklist input based on showChecklist state
+            {showChecklist && (
                 <div className={styles.checklistInput}>
                     {taskChecklist.map((task, index) => (
                         <div key={index} className={styles.taskItem}>
@@ -123,38 +163,8 @@ const Card = ({ task }) => {
                     ))}
                 </div>
             )}
-            <div className={styles.cardBtn}>
-                <div className={styles.dueDate}>{dueDate}</div>
-                <div className={styles.modesBtn}>
-                    {cardStatus === 'todo' && (
-                        <>
-                            <button onClick={() => handleStatusChange('backlog')}>BACKLOG</button>
-                            <button onClick={() => handleStatusChange('progress')}>PROGRESS</button>
-                            <button onClick={() => handleStatusChange('done')}>DONE</button>
-                        </>
-                    )}
-                    {cardStatus === 'backlog' && (
-                        <>
-                            <button onClick={() => handleStatusChange('todo')}>TODO</button>
-                            <button onClick={() => handleStatusChange('progress')}>PROGRESS</button>
-                            <button onClick={() => handleStatusChange('done')}>DONE</button>
-                        </>
-                    )}
-                    {cardStatus === 'progress' && (
-                        <>
-                            <button onClick={() => handleStatusChange('todo')}>TODO</button>
-                            <button onClick={() => handleStatusChange('backlog')}>BACKLOG</button>
-                            <button onClick={() => handleStatusChange('done')}>DONE</button>
-                        </>
-                    )}
-                    {cardStatus === 'done' && (
-                        <>
-                            <button onClick={() => handleStatusChange('todo')}>TODO</button>
-                            <button onClick={() => handleStatusChange('backlog')}>BACKLOG</button>
-                            <button onClick={() => handleStatusChange('progress')}>PROGRESS</button>
-                        </>
-                    )}
-                </div>
+            <div className={styles.modesBtn}>
+                {renderModeButtons()}
             </div>
         </div>
     );

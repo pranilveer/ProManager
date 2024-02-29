@@ -14,7 +14,7 @@ const ToDoModal = ({ isOpen, closeModal }) => {
     const [dueDate, setDueDate] = useState('');
     const [selectedChecklist, setSelectedChecklist] = useState(0);
     const [showCalendar, setShowCalendar] = useState(false);
-    const [tasks, setTasks] = useState([]);
+    // const [tasks, setTasks] = useState([]);
 
 
     const handleDateChange = (date) => {
@@ -61,7 +61,7 @@ const ToDoModal = ({ isOpen, closeModal }) => {
             const response = await axios.get(`${BACKEND_URL}/tasks`, {
               headers: { Authorization: `Bearer ${token}` },
             });
-            setTasks(response.data.tasks);
+            // setTasks(response.data.tasks);
             console.log("responce here", response.data)
             console.log("task here",response.data.tasks);
           } catch (error) {

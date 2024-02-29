@@ -83,9 +83,9 @@ function DashboardContent() {
                             <h2 className={styles.blockHeader}>Backlog</h2>
                         </div>
                         <div className={styles.BacklogContent}>
-                            {/* {backlogTasks.map(task => (
-                                <Card key={task._id} task={task} />
-                            ))} */}
+                            {tasks.map((task) => (
+                                task.status === 'backlog' && <Card key={task._id} task={task} />
+                            ))}
                         </div>
                     </div>
 
@@ -96,9 +96,14 @@ function DashboardContent() {
                                 <button className={styles.addButton} onClick={toggleModal}><img src={addLogo} alt="add logo" /></button>
                             </div>
                         </div>
-                        <div className={styles.toDoContent}>
+                        {/* <div className={styles.toDoContent}>
                             {tasks.map((task) => (
                                 <Card key={task._id} task={task} />
+                            ))}
+                        </div> */}
+                        <div className={styles.toDoContent}>
+                            {tasks.map((task) => (
+                                task.status === 'todo' && <Card key={task._id} task={task} />
                             ))}
                         </div>
                     </div>
@@ -108,9 +113,9 @@ function DashboardContent() {
                             <h2 className={styles.progressHeader}>In Progress</h2>
                         </div>
                         <div className={styles.progressContent}>
-                            {/* {progressTasks.map(task => (
-                                <Card key={task._id} task={task} />
-                            ))} */}
+                            {tasks.map((task) => (
+                                task.status === 'progress' && <Card key={task._id} task={task} />
+                            ))}
                         </div>
                     </div>
 
@@ -119,9 +124,9 @@ function DashboardContent() {
                             <h2 className={styles.doneHeader}>Done</h2>
                         </div>
                         <div className={styles.doneContent}>
-                            {/* {doneTasks.map(task => (
-                                <Card key={task._id} task={task} />
-                            ))} */}
+                            {tasks.map((task) => (
+                                task.status === 'done' && <Card key={task._id} task={task} />
+                            ))}
                         </div>
                     </div>
 

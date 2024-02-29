@@ -68,7 +68,7 @@
   border-radius: 10px;
 }
 
-.toDoContent{
+.toDoContent, .backlogContent, .progressContent, .doneContent{
   height: 100%;
   background-color: #EEF2F5;
   overflow: auto;

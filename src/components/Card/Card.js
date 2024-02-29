@@ -85,33 +85,33 @@ const Card = ({ task, updateTaskStatus }) => {
             case 'todo':
                 return (
                     <>
-                        <button onClick={() => handleStatusChange('backlog')}>Backlog</button>
-                        <button onClick={() => handleStatusChange('progress')}>In Progress</button>
-                        <button onClick={() => handleStatusChange('done')}>Done</button>
+                        <button className={styles.modeBtn} onClick={() => handleStatusChange('backlog')}>Backlog</button>
+                        <button className={styles.modeBtn} onClick={() => handleStatusChange('progress')}>Progress</button>
+                        <button className={styles.modeBtn} onClick={() => handleStatusChange('done')}>Done</button>
                     </>
                 );
             case 'backlog':
                 return (
                     <>
-                        <button onClick={() => handleStatusChange('todo')}>To Do</button>
-                        <button onClick={() => handleStatusChange('progress')}>In Progress</button>
-                        <button onClick={() => handleStatusChange('done')}>Done</button>
+                        <button className={styles.modeBtn} onClick={() => handleStatusChange('todo')}>To-Do</button>
+                        <button className={styles.modeBtn} onClick={() => handleStatusChange('progress')}>Progress</button>
+                        <button className={styles.modeBtn} onClick={() => handleStatusChange('done')}>Done</button>
                     </>
                 );
             case 'progress':
                 return (
                     <>
-                        <button onClick={() => handleStatusChange('backlog')}>Backlog</button>
-                        <button onClick={() => handleStatusChange('todo')}>To Do</button>
-                        <button onClick={() => handleStatusChange('done')}>Done</button>
+                        <button className={styles.modeBtn} onClick={() => handleStatusChange('backlog')}>Backlog</button>
+                        <button className={styles.modeBtn} onClick={() => handleStatusChange('todo')}>To-Do</button>
+                        <button className={styles.modeBtn} onClick={() => handleStatusChange('done')}>Done</button>
                     </>
                 );
             case 'done':
                 return (
                     <>
-                        <button onClick={() => handleStatusChange('backlog')}>Backlog</button>
-                        <button onClick={() => handleStatusChange('todo')}>To Do</button>
-                        <button onClick={() => handleStatusChange('progress')}>In Progress</button>
+                        <button className={styles.modeBtn} onClick={() => handleStatusChange('backlog')}>Backlog</button>
+                        <button className={styles.modeBtn} onClick={() => handleStatusChange('todo')}>To-Do</button>
+                        <button className={styles.modeBtn} onClick={() => handleStatusChange('progress')}>Progress</button>
                     </>
                 );
             default:

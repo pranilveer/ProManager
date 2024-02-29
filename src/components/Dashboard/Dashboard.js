@@ -6,47 +6,34 @@ import addLogo from "../../assets/images/add.svg"
 import ToDoModal from "../ToDoModal/ToDoModal";
 import Card from "../Card/Card";
 
-
 function DashboardContent() {
     const [userName, setUserName] = useState("");
     const [currentDate, setCurrentDate] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [tasks, setTasks] = useState([]);
-    // const [backlogTasks, setBacklogTasks] = useState([]);
-    // const [progressTasks, setProgressTasks] = useState([]);
-    // const [doneTasks, setDoneTasks] = useState([]);
+
     const updateTaskStatus = (taskId, newStatus) => {
         setTasks(prevTasks => {
-            return prevTasks.map(task => {
+            const updatedTasks = prevTasks.map(task => {
                 if (task._id === taskId) {
                     return { ...task, status: newStatus };
                 }
                 return task;
             });
+    
+            countStatuses(updatedTasks);
+            countPriorities(updatedTasks);
+            return updatedTasks;
         });
     };
 
     useEffect(() => {
-        // const fetchTask = async () => {
-        //     try {
-        //         const response = await axios.get(`${BACKEND_URL}/dashboard`); // Assuming the backend route is '/dashboard'
-        //         const { backlogTasks, progressTasks, doneTasks } = response.data;
-
-        //         setBacklogTasks(backlogTasks);
-        //         setProgressTasks(progressTasks);
-        //         setDoneTasks(doneTasks);
-        //     } catch (error) {
-        //         console.error('Error fetching tasks:', error);
-        //     }
-        // };
-        // Set current date when the component mounts
         const currentDate = new Date().toLocaleDateString('en-US', {
             day: 'numeric',
             year: 'numeric',
             month: 'long'
         });
         setCurrentDate(currentDate);
-        // fetchTask();
     }, []);
 
     useEffect(() => {
@@ -57,8 +44,8 @@ function DashboardContent() {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setTasks(response.data.tasks);
-                console.log("responce here", response.data)
-                console.log("task here", response.data.tasks);
+                countStatuses(response.data.tasks); 
+                countPriorities(response.data.tasks);
             } catch (error) {
                 console.error('Error fetching tasks:', error);
             }
@@ -67,9 +54,40 @@ function DashboardContent() {
         fetchTasks();
     }, []);
 
+    // Count the number of tasks with each status
+    const countStatuses = (tasks) => {
+        const counts = tasks.reduce((acc, task) => {
+            acc[task.status] = (acc[task.status] || 0) + 1;
+            return acc;
+        }, {});
+        localStorage.setItem('statusCounts', JSON.stringify(counts)); // Store counts in localStorage
+    };
+
+    const countPriorities = (tasks) => {
+        const counts = tasks.reduce((acc, task) => {
+            acc[task.priority] = (acc[task.priority] || 0) + 1;
+            return acc;
+        }, {});
+        localStorage.setItem("priorityCounts", JSON.stringify(counts)); // Store counts in localStorage
+    };
+
     // Function to handle opening and closing of modal
     const toggleModal = () => {
         setIsModalOpen(!isModalOpen);
+    };
+
+    const handleTaskAdded = async () => {
+        try {
+            const token = localStorage.getItem('userToken');
+            const response = await axios.get(`${BACKEND_URL}/tasks`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            setTasks(response.data.tasks);
+            countStatuses(response.data.tasks); 
+            countPriorities(response.data.tasks);
+        } catch (error) {
+            console.error('Error fetching tasks:', error);
+        }
     };
 
     return (
@@ -92,7 +110,7 @@ function DashboardContent() {
                         <div className={styles.backlogHeader}>
                             <h2 className={styles.blockHeader}>Backlog</h2>
                         </div>
-                        <div className={styles.BacklogContent}>
+                        <div className={styles.backlogContent}>
                             {tasks.map((task) => (
                                 task.status === 'backlog' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} />
                             ))}
@@ -106,11 +124,7 @@ function DashboardContent() {
                                 <button className={styles.addButton} onClick={toggleModal}><img src={addLogo} alt="add logo" /></button>
                             </div>
                         </div>
-                        {/* <div className={styles.toDoContent}>
-                            {tasks.map((task) => (
-                                <Card key={task._id} task={task} />
-                            ))}
-                        </div> */}
+
                         <div className={styles.toDoContent}>
                             {tasks.map((task) => (
                                 task.status === 'todo' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} />
@@ -120,7 +134,7 @@ function DashboardContent() {
 
                     <div className={styles.dashboardBlock}>
                         <div className={styles.progressBlockHeader}>
-                            <h2 className={styles.progressHeader}>In Progress</h2>
+                            <h2 className={styles.blockHeader}>In Progress</h2>
                         </div>
                         <div className={styles.progressContent}>
                             {tasks.map((task) => (
@@ -131,7 +145,7 @@ function DashboardContent() {
 
                     <div className={styles.dashboardBlock}>
                         <div className={styles.doneBlockHeader}>
-                            <h2 className={styles.doneHeader}>Done</h2>
+                            <h2 className={styles.blockHeader}>Done</h2>
                         </div>
                         <div className={styles.doneContent}>
                             {tasks.map((task) => (
@@ -142,7 +156,7 @@ function DashboardContent() {
 
                 </div>
             </div>
-            <ToDoModal isOpen={isModalOpen} closeModal={toggleModal} />
+            <ToDoModal isOpen={isModalOpen} closeModal={toggleModal} onTaskAdded={handleTaskAdded}/>
         </>
     );
 }

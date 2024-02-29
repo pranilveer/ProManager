@@ -7,7 +7,7 @@ import addLogo from "../../assets/images/add.svg"
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-const ToDoModal = ({ isOpen, closeModal }) => {
+const ToDoModal = ({ isOpen, closeModal, onTaskAdded }) => {
     const [title, setTitle] = useState('');
     const [priority, setPriority] = useState('');
     const [checklist, setChecklist] = useState([]);
@@ -85,6 +85,7 @@ const ToDoModal = ({ isOpen, closeModal }) => {
                 headers: { Authorization: `Bearer ${token}` },
               }
             );
+            onTaskAdded();
             closeModal();
             console.log(res.data);
 

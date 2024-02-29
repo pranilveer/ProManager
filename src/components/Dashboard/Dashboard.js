@@ -3,6 +3,7 @@ import axios from "axios";
 import styles from "./Dashboard.module.css";
 import { BACKEND_URL } from "../../constants/baseurl";
 import addLogo from "../../assets/images/add.svg"
+import collapseAllIcon from "../../assets/images/collapseAll.svg"
 import ToDoModal from "../ToDoModal/ToDoModal";
 import Card from "../Card/Card";
 import DeleteCardModal from "../DeleteCard/DeleteCard";
@@ -16,6 +17,10 @@ function DashboardContent() {
     const [isCloseModalOpen, setIsCloseModalOpen] = useState(false);
     const [tasks, setTasks] = useState([]);
     const [taskIdToDelete, setTaskIdToDelete] = useState(null);
+    const [collapseAll, setCollapseAll] = useState(true);
+    const [collapseAllBacklog, setCollapseAllBacklog] = useState(true);
+    const [collapseAllProgress, setCollapseAllProgress] = useState(true);
+    const [collapseAllDone, setCollapseAllDone] = useState(true);
 
     const updateTaskStatus = (taskId, newStatus) => {
         setTasks(prevTasks => {
@@ -47,7 +52,6 @@ function DashboardContent() {
             const response = await axios.get(`${BACKEND_URL}/tasks`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            console.log("response here", response.data)
             setTasks(response.data.tasks);
             countStatuses(response.data.tasks); 
             countPriorities(response.data.tasks);
@@ -137,12 +141,23 @@ function DashboardContent() {
             });
             setIsCloseModalOpen(false);
             fetchTasks();
-            // Optionally, you can handle UI updates or any other logic after successful deletion
         } catch (error) {
             console.error('Error deleting card:', error);
-            // Optionally, you can handle error responses or display error messages
         }
     }
+
+    const handleCollapseAll = () => {
+        setCollapseAll(!collapseAll);
+    };
+    const handleCollapseAllBacklog = () => {
+        setCollapseAllBacklog(!collapseAllBacklog);
+    };
+    const handleCollapseAllProgress = () => {
+        setCollapseAllProgress(!collapseAllProgress);
+    };
+    const handleCollapseAllDone = () => {
+        setCollapseAllDone(!collapseAllDone);
+    };
 
     return (
         <>
@@ -161,12 +176,15 @@ function DashboardContent() {
                 </div>
                 <div className={styles.dashboardData}>
                     <div className={styles.dashboardBlock}>
-                        <div className={styles.backlogHeader}>
+                        <div className={styles.backlogBlockHeader}>
                             <h2 className={styles.blockHeader}>Backlog</h2>
+                            <div className={styles.BtnDiv}>
+                                <button className={styles.addButton} onClick={handleCollapseAllBacklog}><img src={collapseAllIcon} alt="collapse logo" /></button>
+                            </div>
                         </div>
                         <div className={styles.backlogContent}>
                             {tasks.map((task) => (
-                                task.status === 'backlog' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} toggleCloseModal={toggleCloseModal} />
+                                task.status === 'backlog' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} toggleCloseModal={toggleCloseModal} collapseAll={collapseAllBacklog}/>
                             ))}
                         </div>
                     </div>
@@ -176,12 +194,13 @@ function DashboardContent() {
                             <h2 className={styles.blockHeader}>To Do</h2>
                             <div className={styles.BtnDiv}>
                                 <button className={styles.addButton} onClick={toggleModal}><img src={addLogo} alt="add logo" /></button>
+                                <button className={styles.addButton} onClick={handleCollapseAll}><img src={collapseAllIcon} alt="collapse logo" /></button>
                             </div>
                         </div>
 
                         <div className={styles.toDoContent}>
                             {tasks.map((task) => (
-                                task.status === 'todo' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} toggleCloseModal={toggleCloseModal}/>
+                                task.status === 'todo' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} toggleCloseModal={toggleCloseModal} collapseAll={collapseAll}/>
                             ))}
                         </div>
                     </div>
@@ -189,10 +208,13 @@ function DashboardContent() {
                     <div className={styles.dashboardBlock}>
                         <div className={styles.progressBlockHeader}>
                             <h2 className={styles.blockHeader}>In Progress</h2>
+                            <div className={styles.BtnDiv}>
+                                <button className={styles.addButton} onClick={handleCollapseAllProgress}><img src={collapseAllIcon} alt="collapse logo" /></button>
+                            </div>
                         </div>
                         <div className={styles.progressContent}>
                             {tasks.map((task) => (
-                                task.status === 'progress' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} toggleCloseModal={toggleCloseModal}/>
+                                task.status === 'progress' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} toggleCloseModal={toggleCloseModal} collapseAll={collapseAllProgress}/>
                             ))}
                         </div>
                     </div>
@@ -200,10 +222,13 @@ function DashboardContent() {
                     <div className={styles.dashboardBlock}>
                         <div className={styles.doneBlockHeader}>
                             <h2 className={styles.blockHeader}>Done</h2>
+                            <div className={styles.BtnDiv}>
+                                <button className={styles.addButton} onClick={handleCollapseAllDone}><img src={collapseAllIcon} alt="collapse logo" /></button>
+                            </div>
                         </div>
                         <div className={styles.doneContent}>
                             {tasks.map((task) => (
-                                task.status === 'done' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} toggleCloseModal={toggleCloseModal}/>
+                                task.status === 'done' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} toggleCloseModal={toggleCloseModal} collapseAll={collapseAllDone}/>
                             ))}
                         </div>
                     </div>

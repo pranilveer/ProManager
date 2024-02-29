@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './Card.module.css';
 import dotLogo from "../../assets/images/dots.svg"
 import collapseDownIcon from "../../assets/images/collapsedown.svg"
@@ -6,7 +6,7 @@ import collapseUpIcon from "../../assets/images/collapseup.svg"
 import { BACKEND_URL } from '../../constants/baseurl';
 import axios from 'axios';
 
-const Card = ({ task, updateTaskStatus, toggleCloseModal }) => {
+const Card = ({ task, updateTaskStatus, toggleCloseModal, collapseAll }) => {
     const { _id: taskId, title, priority, status, checklist: taskChecklist, dueDate } = task; // Renamed checklist to taskChecklist
     const [showOptions, setShowOptions] = useState(false);
     const [checklist, setChecklist] = useState([]);
@@ -15,6 +15,10 @@ const Card = ({ task, updateTaskStatus, toggleCloseModal }) => {
 
     const checkedTasks = taskChecklist.filter(task => task.isChecked).length; // Updated to use taskChecklist
     const totalTasks = taskChecklist.length; // Updated to use taskChecklist
+
+    useEffect(() => {
+        setShowChecklist(!collapseAll);
+    }, [collapseAll]);
 
     const toggleOptions = () => {
         setShowOptions(!showOptions);

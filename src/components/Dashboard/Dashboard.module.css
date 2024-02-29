@@ -83,7 +83,7 @@
   font-weight: 500;
 }
 
-.todoBlockHeader{
+.todoBlockHeader, .backlogBlockHeader, .progressBlockHeader, .doneBlockHeader{
   display: flex;
   justify-content: space-between;
 }

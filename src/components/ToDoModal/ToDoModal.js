@@ -11,7 +11,7 @@ const ToDoModal = ({ isOpen, closeModal, onTaskAdded }) => {
     const [title, setTitle] = useState('');
     const [priority, setPriority] = useState('');
     const [checklist, setChecklist] = useState([]);
-    const [dueDate, setDueDate] = useState('');
+    const [dueDate, setDueDate] = useState(new Date());
     const [selectedChecklist, setSelectedChecklist] = useState(0);
     const [showCalendar, setShowCalendar] = useState(false);
     // const [tasks, setTasks] = useState([]);
@@ -56,38 +56,40 @@ const ToDoModal = ({ isOpen, closeModal, onTaskAdded }) => {
 
     useEffect(() => {
         const fetchTasks = async () => {
-          try {
-            const token = localStorage.getItem('userToken');
-            const response = await axios.get(`${BACKEND_URL}/tasks`, {
-              headers: { Authorization: `Bearer ${token}` },
-            });
-            // setTasks(response.data.tasks);
-            console.log("responce here", response.data)
-            console.log("task here",response.data.tasks);
-          } catch (error) {
-            console.error('Error fetching tasks:', error);
-          }
+            try {
+                const token = localStorage.getItem('userToken');
+                const response = await axios.get(`${BACKEND_URL}/tasks`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                // setTasks(response.data.tasks);
+                console.log("responce here", response.data)
+                console.log("task here", response.data.tasks);
+            } catch (error) {
+                console.error('Error fetching tasks:', error);
+            }
         };
-        
+
         fetchTasks();
-      }, []);
+    }, []);
 
 
     const handleSave = async () => {
-            const token = localStorage.getItem("userToken");
-            const res = await axios.post(
-              `${BACKEND_URL}/tasks`,
-              { title,
+        const token = localStorage.getItem("userToken");
+        const res = await axios.post(
+            `${BACKEND_URL}/tasks`,
+            {
+                title,
                 priority,
                 checklist,
-                dueDate },
-              {
+                dueDate
+            },
+            {
                 headers: { Authorization: `Bearer ${token}` },
-              }
-            );
-            onTaskAdded();
-            closeModal();
-            console.log(res.data);
+            }
+        );
+        onTaskAdded();
+        closeModal();
+        console.log(res.data);
 
     };
 
@@ -158,11 +160,10 @@ const ToDoModal = ({ isOpen, closeModal, onTaskAdded }) => {
                 <div className={styles.buttonDiv}>
                     {showCalendar && (
                         <DatePicker
+                            showIcon
                             selected={dueDate}
                             onChange={handleDateChange}
-                            calendarClassName={styles.calendar} // Optional: for styling the calendar
-                            showTimeSelect // Optional: to include time selection
-                            dateFormat="MMMM d, yyyy" // Optional: format for the selected date
+                            icon="fa fa-calender"
                         />
                     )}
                     <button onClick={toggleCalendar} className={styles.dueDateBtn}>Select Due Date</button>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './ToDoModal.module.css';
 import axios from 'axios';
 import { BACKEND_URL } from "../../constants/baseurl"
@@ -14,6 +14,8 @@ const ToDoModal = ({ isOpen, closeModal }) => {
     const [dueDate, setDueDate] = useState('');
     const [selectedChecklist, setSelectedChecklist] = useState(0);
     const [showCalendar, setShowCalendar] = useState(false);
+    const [tasks, setTasks] = useState([]);
+
 
     const handleDateChange = (date) => {
         setDueDate(date);
@@ -52,23 +54,40 @@ const ToDoModal = ({ isOpen, closeModal }) => {
         setSelectedChecklist(selected);
     };
 
-    const handleSave = async () => {
-        try {
+    useEffect(() => {
+        const fetchTasks = async () => {
+          try {
             const token = localStorage.getItem('userToken');
-            await axios.post(`${BACKEND_URL}/tasks`, {
-                title,
+            const response = await axios.get(`${BACKEND_URL}/tasks`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            setTasks(response.data.tasks);
+            console.log("responce here", response.data)
+            console.log("task here",response.data.tasks);
+          } catch (error) {
+            console.error('Error fetching tasks:', error);
+          }
+        };
+        
+        fetchTasks();
+      }, []);
+
+
+    const handleSave = async () => {
+            const token = localStorage.getItem("userToken");
+            const res = await axios.post(
+              `${BACKEND_URL}/tasks`,
+              { title,
                 priority,
                 checklist,
-                dueDate,
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+                dueDate },
+              {
+                headers: { Authorization: `Bearer ${token}` },
+              }
+            );
             closeModal();
-        } catch (error) {
-            console.error('Error saving task:', error);
-        }
+            console.log(res.data);
+
     };
 
     return (

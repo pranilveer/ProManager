@@ -18,14 +18,14 @@ function SettingContent() {
 
         try {
             const jwtToken = localStorage.getItem("userToken");
+            console.log(jwtToken);
     
             const response = await fetch(`${BACKEND_URL}/users/profile`, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${jwtToken}`
+                    'authorization': `Bearer ${jwtToken}`
                 },
-                body: JSON.stringify({ name, oldPassword, newPassword })
+                body: JSON.stringify({ oldPassword, newPassword })
             });
     
             const data = await response.json();

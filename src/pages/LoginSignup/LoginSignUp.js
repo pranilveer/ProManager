@@ -90,6 +90,7 @@ function LoginSignup() {
 
 
             if (response.data.token) {
+                localStorage.setItem("userId", response.data.user._id);
                 localStorage.setItem("userToken", response.data.token);
                 localStorage.setItem("name", response.data.name);
                 toast.success("Registration Successful", {
@@ -156,6 +157,7 @@ function LoginSignup() {
             });
 
             if (response.data.token) {
+                localStorage.setItem("userId", response.data.user._id);
                 localStorage.setItem("userToken", response.data.token);
                 setIsLoginLoading(false);
                 toast.success("Login Successful", {

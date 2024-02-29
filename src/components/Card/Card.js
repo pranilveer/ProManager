@@ -6,8 +6,8 @@ import collapseUpIcon from "../../assets/images/collapseup.svg"
 import { BACKEND_URL } from '../../constants/baseurl';
 import axios from 'axios';
 
-const Card = ({ task, updateTaskStatus }) => {
-    const { title, priority, status, checklist: taskChecklist, dueDate } = task; // Renamed checklist to taskChecklist
+const Card = ({ task, updateTaskStatus, toggleCloseModal }) => {
+    const { _id: taskId, title, priority, status, checklist: taskChecklist, dueDate } = task; // Renamed checklist to taskChecklist
     const [showOptions, setShowOptions] = useState(false);
     const [checklist, setChecklist] = useState([]);
     const [showChecklist, setShowChecklist] = useState(false);
@@ -73,10 +73,14 @@ const Card = ({ task, updateTaskStatus }) => {
             });
             console.log(response.data);
             updateTaskStatus(taskId, newStatus);
-            // Log the response from the backend
         } catch (error) {
             console.error('Error updating task status:', error);
         }
+    };
+
+    const handleDeleteClick = () => {
+        toggleOptions(); // Close options menu
+        toggleCloseModal(taskId); // Open delete modal with taskId
     };
 
     // Function to render the mode buttons based on the current status
@@ -137,7 +141,7 @@ const Card = ({ task, updateTaskStatus }) => {
                     <div className={styles.options}>
                         <div className={styles.optionBtn}>Edit</div>
                         <div className={styles.optionBtn}>Share</div>
-                        <div className={styles.optionBtnDelete}>Delete</div>
+                        <div className={styles.optionBtnDelete} onClick={handleDeleteClick}>Delete</div>
                     </div>
                 )}
             </div>

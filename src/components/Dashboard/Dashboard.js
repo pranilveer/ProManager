@@ -5,12 +5,17 @@ import { BACKEND_URL } from "../../constants/baseurl";
 import addLogo from "../../assets/images/add.svg"
 import ToDoModal from "../ToDoModal/ToDoModal";
 import Card from "../Card/Card";
+import DeleteCardModal from "../DeleteCard/DeleteCard";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function DashboardContent() {
     const [userName, setUserName] = useState("");
     const [currentDate, setCurrentDate] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isCloseModalOpen, setIsCloseModalOpen] = useState(false);
     const [tasks, setTasks] = useState([]);
+    const [taskIdToDelete, setTaskIdToDelete] = useState(null);
 
     const updateTaskStatus = (taskId, newStatus) => {
         setTasks(prevTasks => {
@@ -36,22 +41,22 @@ function DashboardContent() {
         setCurrentDate(currentDate);
     }, []);
 
-    useEffect(() => {
-        const fetchTasks = async () => {
-            try {
-                const token = localStorage.getItem('userToken');
-                const response = await axios.get(`${BACKEND_URL}/tasks`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                console.log("response here", response.data)
-                setTasks(response.data.tasks);
-                countStatuses(response.data.tasks); 
-                countPriorities(response.data.tasks);
-            } catch (error) {
-                console.error('Error fetching tasks:', error);
-            }
-        };
+    const fetchTasks = async () => {
+        try {
+            const token = localStorage.getItem('userToken');
+            const response = await axios.get(`${BACKEND_URL}/tasks`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            console.log("response here", response.data)
+            setTasks(response.data.tasks);
+            countStatuses(response.data.tasks); 
+            countPriorities(response.data.tasks);
+        } catch (error) {
+            console.error('Error fetching tasks:', error);
+        }
+    };
 
+    useEffect(() => {
         fetchTasks();
     }, []);
 
@@ -95,6 +100,12 @@ function DashboardContent() {
         setIsModalOpen(!isModalOpen);
     };
 
+    const toggleCloseModal = (taskId) => { // Update to pass taskId to delete modal
+        setIsCloseModalOpen(!isCloseModalOpen);
+        setTaskIdToDelete(taskId); // Set taskId to delete
+    };
+
+
     const handleTaskAdded = async () => {
         try {
             const token = localStorage.getItem('userToken');
@@ -108,6 +119,30 @@ function DashboardContent() {
             console.error('Error fetching tasks:', error);
         }
     };
+
+    const handleCardDeleted = async () => {
+        try {
+            const token = localStorage.getItem('userToken');
+            await axios.delete(`${BACKEND_URL}/tasks/${taskIdToDelete}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            toast.success("Card deleted successfully", {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+            });
+            setIsCloseModalOpen(false);
+            fetchTasks();
+            // Optionally, you can handle UI updates or any other logic after successful deletion
+        } catch (error) {
+            console.error('Error deleting card:', error);
+            // Optionally, you can handle error responses or display error messages
+        }
+    }
 
     return (
         <>
@@ -131,7 +166,7 @@ function DashboardContent() {
                         </div>
                         <div className={styles.backlogContent}>
                             {tasks.map((task) => (
-                                task.status === 'backlog' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} />
+                                task.status === 'backlog' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} toggleCloseModal={toggleCloseModal} />
                             ))}
                         </div>
                     </div>
@@ -146,7 +181,7 @@ function DashboardContent() {
 
                         <div className={styles.toDoContent}>
                             {tasks.map((task) => (
-                                task.status === 'todo' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} />
+                                task.status === 'todo' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} toggleCloseModal={toggleCloseModal}/>
                             ))}
                         </div>
                     </div>
@@ -157,7 +192,7 @@ function DashboardContent() {
                         </div>
                         <div className={styles.progressContent}>
                             {tasks.map((task) => (
-                                task.status === 'progress' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} />
+                                task.status === 'progress' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} toggleCloseModal={toggleCloseModal}/>
                             ))}
                         </div>
                     </div>
@@ -168,7 +203,7 @@ function DashboardContent() {
                         </div>
                         <div className={styles.doneContent}>
                             {tasks.map((task) => (
-                                task.status === 'done' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} />
+                                task.status === 'done' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} toggleCloseModal={toggleCloseModal}/>
                             ))}
                         </div>
                     </div>
@@ -176,6 +211,8 @@ function DashboardContent() {
                 </div>
             </div>
             <ToDoModal isOpen={isModalOpen} closeModal={toggleModal} onTaskAdded={handleTaskAdded}/>
+            <DeleteCardModal isOpen={isCloseModalOpen} closeModal={toggleCloseModal} onDeleteConfirm={handleCardDeleted}/>
+            <ToastContainer />
         </>
     );
 }

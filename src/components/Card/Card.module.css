@@ -66,6 +66,7 @@
     font-family: "Poppins", sans-serif;
     font-weight: 600;
     font-style: normal; 
+    cursor: pointer;
 }
 
 .optionBtnDelete{
@@ -74,7 +75,7 @@
     font-weight: 600;
     font-style: normal; 
     color: red;
-
+    cursor: pointer;
 }
 
 .title{

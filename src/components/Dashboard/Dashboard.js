@@ -15,6 +15,16 @@ function DashboardContent() {
     // const [backlogTasks, setBacklogTasks] = useState([]);
     // const [progressTasks, setProgressTasks] = useState([]);
     // const [doneTasks, setDoneTasks] = useState([]);
+    const updateTaskStatus = (taskId, newStatus) => {
+        setTasks(prevTasks => {
+            return prevTasks.map(task => {
+                if (task._id === taskId) {
+                    return { ...task, status: newStatus };
+                }
+                return task;
+            });
+        });
+    };
 
     useEffect(() => {
         // const fetchTask = async () => {
@@ -84,7 +94,7 @@ function DashboardContent() {
                         </div>
                         <div className={styles.BacklogContent}>
                             {tasks.map((task) => (
-                                task.status === 'backlog' && <Card key={task._id} task={task} />
+                                task.status === 'backlog' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} />
                             ))}
                         </div>
                     </div>
@@ -103,7 +113,7 @@ function DashboardContent() {
                         </div> */}
                         <div className={styles.toDoContent}>
                             {tasks.map((task) => (
-                                task.status === 'todo' && <Card key={task._id} task={task} />
+                                task.status === 'todo' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} />
                             ))}
                         </div>
                     </div>
@@ -114,7 +124,7 @@ function DashboardContent() {
                         </div>
                         <div className={styles.progressContent}>
                             {tasks.map((task) => (
-                                task.status === 'progress' && <Card key={task._id} task={task} />
+                                task.status === 'progress' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} />
                             ))}
                         </div>
                     </div>
@@ -125,7 +135,7 @@ function DashboardContent() {
                         </div>
                         <div className={styles.doneContent}>
                             {tasks.map((task) => (
-                                task.status === 'done' && <Card key={task._id} task={task} />
+                                task.status === 'done' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} />
                             ))}
                         </div>
                     </div>

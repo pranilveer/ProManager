@@ -6,7 +6,7 @@ import collapseUpIcon from "../../assets/images/collapseup.svg"
 import { BACKEND_URL } from '../../constants/baseurl';
 import axios from 'axios';
 
-const Card = ({ task }) => {
+const Card = ({ task, updateTaskStatus }) => {
     const { title, priority, status, checklist: taskChecklist, dueDate } = task; // Renamed checklist to taskChecklist
     const [showOptions, setShowOptions] = useState(false);
     const [checklist, setChecklist] = useState([]);
@@ -71,7 +71,9 @@ const Card = ({ task }) => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log(response.data); // Log the response from the backend
+            console.log(response.data);
+            updateTaskStatus(taskId, newStatus);
+            // Log the response from the backend
         } catch (error) {
             console.error('Error updating task status:', error);
         }

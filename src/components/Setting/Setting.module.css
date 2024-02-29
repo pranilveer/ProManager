@@ -15,7 +15,7 @@
 
 .formInput {
     padding-left: 10px;
-    width: 80%;
+    width: 70%;
     height: 2.5rem;
     border-radius: 10px;
     border: 1px solid rgb(132, 132, 132);
@@ -24,8 +24,8 @@
 
 .logo {
     position: relative;
-    top: 42px;
-    right: 40%;
+    left: 40px;
+    top: 8px;
 }
 
 .Icon {
@@ -36,8 +36,14 @@
     width: 30vw;
 }
 
+.formAttribute{
+    display: flex;
+    margin: auto;
+    margin-top: 2rem;
+}
+
 .updateBtn{
-    width: 95%;
+    width: 80%;
     height: 2.5rem;
     margin: 1.5rem 0;
     border-radius: 55px;
@@ -52,4 +58,16 @@
 
 .updateBtn:hover {
     background: #1bc5df;
+}
+
+.passwordToggle, .newPasswordToggle{
+    position: relative;
+    height: 25px;
+    right: 30px;
+    top: 10px;
+}
+
+.btnDiv{
+    display: flex;
+    justify-content: center;
 }

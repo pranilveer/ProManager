@@ -6,12 +6,16 @@ import "react-toastify/dist/ReactToastify.css";
 import styles from "./Setting.module.css";
 import userIcon from "../../assets/images/profile.svg"
 import lockIcon from "../../assets/images/lock.svg"
+import eyeIcon from "../../assets/images/view.png"
+import eyeSlashIcon from "../../assets/images/hide.png"
 
 function SettingContent() {
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [userName, setUserName] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [showNewPassword, setShowNewPassword] = useState(false);
 
     const handleUpdatePassword = async () => {
         setIsLoading(true);
@@ -26,7 +30,7 @@ function SettingContent() {
             setIsLoading(false);
             return;
         }
-        if(!newPassword || !oldPassword){
+        if (!newPassword || !oldPassword) {
             toast.error("Please fill in all the fields", {
                 position: "top-center",
                 autoClose: 2000,
@@ -55,7 +59,7 @@ function SettingContent() {
                 hideProgressBar: false,
                 closeOnClick: true,
                 draggable: true,
-            });            
+            });
             setNewPassword("");
             setOldPassword("");
         } catch (error) {
@@ -101,6 +105,15 @@ function SettingContent() {
         fetchUserData();
     }, []);
 
+    const togglePassword = () => {
+        setShowPassword(!showPassword);
+    };
+
+    const toggleNewPassword = () => {
+        setShowNewPassword(!showNewPassword);
+    };
+
+
     return (
         <div className={styles.settingScreen}>
             <h1 className={styles.settingTitle}>Settings</h1>
@@ -123,28 +136,33 @@ function SettingContent() {
                 <div className={styles.formAttribute}>
                     <span className={styles.logo}><img className={styles.Icon} src={lockIcon} alt="email icon" /></span>
                     <input
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         name="password"
                         placeholder="Old Password"
                         value={oldPassword}
                         onChange={(e) => setOldPassword(e.target.value)}
                         className={styles.formInput}
                     />
+                    <img src={showPassword ? eyeIcon : eyeSlashIcon} alt="eye icon" className={styles.passwordToggle} onClick={togglePassword} />
+
                 </div>
                 <div className={styles.formAttribute}>
-                    <span className={styles.logo}><img className={styles.Icon} src={lockIcon} alt="email icon" /></span>
+                    <span className={styles.logo}><img className={styles.Icon} src={lockIcon} alt="lock icon" /></span>
                     <input
-                        type="password"
+                        type={showNewPassword ? "text" : "password"}
                         name="password"
                         placeholder="New Password"
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
                         className={styles.formInput}
                     />
+                    <img src={showNewPassword ? eyeIcon : eyeSlashIcon} alt="eye icon" className={styles.newPasswordToggle} onClick={toggleNewPassword} />
                 </div>
-                <button onClick={handleUpdatePassword} disabled={isLoading} className={styles.updateBtn}>
-                    {isLoading ? "Updating..." : "Update"}
-                </button>
+                <div className={styles.btnDiv}>
+                    <button onClick={handleUpdatePassword} disabled={isLoading} className={styles.updateBtn}>
+                        {isLoading ? "Updating..." : "Update"}
+                    </button>
+                </div>
             </form>
             <ToastContainer />
         </div>

@@ -51,8 +51,8 @@ body {
 
 .logo {
     position: relative;
-    top: 40px;
-    right: 43%;
+    left: 40px;
+    top: 4px;    
 }
 
 .Icon {
@@ -81,15 +81,20 @@ body {
 
 .formInput {
     padding-left: 10px;
-    width: 85%;
+    width: 70%;
     height: 2rem;
     border-radius: 10px;
     border: 1px solid rgb(132, 132, 132);
     padding-left: 50px;
 }
 
+.formAttribute{
+    display: flex;
+    margin-top: 2rem;
+}
+
 .signUpBtn {
-    width: 100%;
+    width: 90%;
     height: 2.5rem;
     margin: 1.5rem 0;
     border-radius: 55px;
@@ -111,7 +116,7 @@ body {
 }
 
 .redirectBtn {
-    width: 100%;
+    width: 85%;
     height: 2rem;
     margin: 1.5rem 0;
     border-radius: 55px;
@@ -124,4 +129,11 @@ body {
 
 .redirectBtn:hover {
     background-color: rgb(245, 245, 245);
+}
+
+.passwordToggle, .confirmPasswordToggle, .loginPasswordToggle{
+    position: relative;
+    top: 5px;
+    height: 25px;
+    right: 35px;
 }

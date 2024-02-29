@@ -9,10 +9,15 @@ import logo from "../../assets/images/logo.svg"
 import emailIcon from "../../assets/images/mail.svg"
 import lockIcon from "../../assets/images/lock.svg"
 import userIcon from "../../assets/images/profile.svg"
+import eyeIcon from "../../assets/images/view.png"
+import eyeSlashIcon from "../../assets/images/hide.png"
 
 function LoginSignup() {
     // State variables for managing the form and UI state
-    const [showSignupForm, setShowSignupForm] = useState(true);
+    const [showSignupForm, setShowSignupForm] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [showLoginPassword, setShowLoginPassword] = useState(false);
 
     // Function to switch between Sign Up and Log In forms
     const showSignup = () => {
@@ -186,6 +191,18 @@ function LoginSignup() {
         }
     };
 
+    const togglePassword = () => {
+        setShowPassword(!showPassword);
+    };
+
+    const toggleConfirmPassword = () => {
+        setShowConfirmPassword(!showConfirmPassword);
+    };
+
+    const toggleLoginPassword = () => {
+        setShowLoginPassword(!showLoginPassword);
+    };
+
     return (
         <>
             <div className={styles.mainContainer}>
@@ -220,15 +237,15 @@ function LoginSignup() {
                             <div className={styles.formAttribute}>
                                 <span className={styles.logo}><img className={styles.Icon} src={lockIcon} alt="email icon" /></span>
                                 <input
-                                    type="password"
+                                    type={showLoginPassword ? "text" : "password"}
                                     id="password"
                                     name="password"
                                     value={password}
                                     placeholder="Password"
                                     onChange={(e) => setPassword(e.target.value)}
-                                    // required
                                     className={styles.formInput}
                                 />
+                                <img src={showLoginPassword ? eyeIcon : eyeSlashIcon} alt="eye icon" className={styles.loginPasswordToggle} onClick={toggleLoginPassword} />
                             </div>
                             <button type="submit" className={styles.signUpBtn}>
                                 {isLoginLoading ? "Loading..." : "Log in"}
@@ -241,8 +258,8 @@ function LoginSignup() {
                     <div className={styles.logInFormContainer}>
                         <h1>Register</h1>
                         <form
-                            onSubmit={handleRegister}
                             className={styles.formContainer}
+                            onSubmit={handleRegister}
                         >
                             <div className={styles.formAttribute}>
                                 <span className={styles.logo}><img className={styles.Icon} src={userIcon} alt="email icon" /></span>
@@ -274,7 +291,7 @@ function LoginSignup() {
                             <div className={styles.formAttribute}>
                                 <span className={styles.logo}><img className={styles.Icon} src={lockIcon} alt="email icon" /></span>
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     id="password"
                                     name="password"
                                     value={password}
@@ -283,11 +300,13 @@ function LoginSignup() {
                                     // required
                                     className={styles.formInput}
                                 />
+                                <img src={showPassword ? eyeIcon : eyeSlashIcon} alt="eye icon" className={styles.passwordToggle} onClick={togglePassword} />
+
                             </div>
                             <div className={styles.formAttribute}>
                                 <span className={styles.logo}><img className={styles.Icon} src={lockIcon} alt="email icon" /></span>
                                 <input
-                                    type="password"
+                                    type={showConfirmPassword ? "text" : "password"}
                                     id="password"
                                     name="password"
                                     value={confirmPassword}
@@ -296,8 +315,10 @@ function LoginSignup() {
                                     // required
                                     className={styles.formInput}
                                 />
+                                <img src={showConfirmPassword ? eyeIcon : eyeSlashIcon} alt="eye icon" className={styles.confirmPasswordToggle} onClick={toggleConfirmPassword} />
+
                             </div>
-                            <button type="submit" className={styles.signUpBtn}>
+                            <button type="submit" className={styles.signUpBtn} >
                                 {isSignUpLoading ? "Loading..." : "Register"}
                             </button>
                             <p className={styles.formName}>Have an account?</p>

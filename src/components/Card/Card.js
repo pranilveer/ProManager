@@ -20,17 +20,14 @@ const Card = ({ task, updateTaskStatus, toggleCloseModal, collapseAll, onTaskAdd
     const totalTasks = taskChecklist.length; // Updated to use taskChecklist
 
     useEffect(() => {
-        setShowChecklist(!collapseAll);
+        setShowChecklist(false);
+        setCollapseIcon(collapseDownIcon);
     }, [collapseAll]);
 
     const toggleOptions = () => {
         setShowOptions(!showOptions);
     };
 
-    // const toggleEditModal = () => {
-    //     setIsEditModalOpen(!isEditModalOpen);
-    //     setTaskIdToEdit(taskId); // Set the task ID to edit
-    // };
 
     const toggleChecklist = () => {
         setShowChecklist(!showChecklist); // Toggle checklist visibility
@@ -83,7 +80,6 @@ const Card = ({ task, updateTaskStatus, toggleCloseModal, collapseAll, onTaskAdd
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log(response.data);
             updateTaskStatus(taskId, newStatus);
         } catch (error) {
             console.error('Error updating task status:', error);

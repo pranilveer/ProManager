@@ -292,7 +292,7 @@ function LoginSignup() {
                                 <span className={styles.logo}><img className={styles.Icon} src={lockIcon} alt="email icon" /></span>
                                 <input
                                     type={showPassword ? "text" : "password"}
-                                    id="password"
+                                    id="password1"
                                     name="password"
                                     value={password}
                                     placeholder="Password"
@@ -307,7 +307,7 @@ function LoginSignup() {
                                 <span className={styles.logo}><img className={styles.Icon} src={lockIcon} alt="email icon" /></span>
                                 <input
                                     type={showConfirmPassword ? "text" : "password"}
-                                    id="password"
+                                    id="password2"
                                     name="password"
                                     value={confirmPassword}
                                     placeholder="Confirm Password"

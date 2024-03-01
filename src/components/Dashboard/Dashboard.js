@@ -184,7 +184,15 @@ function DashboardContent() {
                         </div>
                         <div className={styles.backlogContent}>
                             {tasks.map((task) => (
-                                task.status === 'backlog' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} toggleCloseModal={toggleCloseModal} collapseAll={collapseAllBacklog}/>
+                                task.status === 'backlog' && 
+                                <Card 
+                                key={task._id} 
+                                task={task} 
+                                updateTaskStatus={updateTaskStatus} 
+                                toggleCloseModal={toggleCloseModal} 
+                                collapseAll={collapseAllBacklog}
+                                onTaskAdded={handleTaskAdded}
+                                />
                             ))}
                         </div>
                     </div>
@@ -200,7 +208,14 @@ function DashboardContent() {
 
                         <div className={styles.toDoContent}>
                             {tasks.map((task) => (
-                                task.status === 'todo' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} toggleCloseModal={toggleCloseModal} collapseAll={collapseAll}/>
+                                task.status === 'todo' && 
+                                <Card 
+                                key={task._id} 
+                                task={task} 
+                                updateTaskStatus={updateTaskStatus} 
+                                toggleCloseModal={toggleCloseModal} 
+                                collapseAll={collapseAll}
+                                onTaskAdded={handleTaskAdded}/>
                             ))}
                         </div>
                     </div>
@@ -214,7 +229,14 @@ function DashboardContent() {
                         </div>
                         <div className={styles.progressContent}>
                             {tasks.map((task) => (
-                                task.status === 'progress' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} toggleCloseModal={toggleCloseModal} collapseAll={collapseAllProgress}/>
+                                task.status === 'progress' && 
+                                <Card 
+                                key={task._id} 
+                                task={task} 
+                                updateTaskStatus={updateTaskStatus} 
+                                toggleCloseModal={toggleCloseModal} 
+                                collapseAll={collapseAllProgress}
+                                onTaskAdded={handleTaskAdded}/>
                             ))}
                         </div>
                     </div>
@@ -228,7 +250,15 @@ function DashboardContent() {
                         </div>
                         <div className={styles.doneContent}>
                             {tasks.map((task) => (
-                                task.status === 'done' && <Card key={task._id} task={task} updateTaskStatus={updateTaskStatus} toggleCloseModal={toggleCloseModal} collapseAll={collapseAllDone}/>
+                                task.status === 'done' && 
+                                <Card 
+                                key={task._id} 
+                                task={task} 
+                                updateTaskStatus={updateTaskStatus} 
+                                toggleCloseModal={toggleCloseModal} 
+                                collapseAll={collapseAllDone}
+                                onTaskAdded={handleTaskAdded}
+                                />
                             ))}
                         </div>
                     </div>

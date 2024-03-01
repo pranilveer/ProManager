@@ -3,15 +3,18 @@ import styles from './Card.module.css';
 import dotLogo from "../../assets/images/dots.svg"
 import collapseDownIcon from "../../assets/images/collapsedown.svg"
 import collapseUpIcon from "../../assets/images/collapseup.svg"
+import ToDoEditModal from '../ToDoEditModal/ToDoEditModal';
 import { BACKEND_URL } from '../../constants/baseurl';
 import axios from 'axios';
 
-const Card = ({ task, updateTaskStatus, toggleCloseModal, collapseAll }) => {
+const Card = ({ task, updateTaskStatus, toggleCloseModal, collapseAll, onTaskAdded }) => {
     const { _id: taskId, title, priority, status, checklist: taskChecklist, dueDate } = task; // Renamed checklist to taskChecklist
     const [showOptions, setShowOptions] = useState(false);
     const [checklist, setChecklist] = useState([]);
     const [showChecklist, setShowChecklist] = useState(false);
     const [collapseIcon, setCollapseIcon] = useState(collapseDownIcon);
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [editedTask, setEditedTask] = useState(null);
 
     const checkedTasks = taskChecklist.filter(task => task.isChecked).length; // Updated to use taskChecklist
     const totalTasks = taskChecklist.length; // Updated to use taskChecklist
@@ -23,6 +26,11 @@ const Card = ({ task, updateTaskStatus, toggleCloseModal, collapseAll }) => {
     const toggleOptions = () => {
         setShowOptions(!showOptions);
     };
+
+    // const toggleEditModal = () => {
+    //     setIsEditModalOpen(!isEditModalOpen);
+    //     setTaskIdToEdit(taskId); // Set the task ID to edit
+    // };
 
     const toggleChecklist = () => {
         setShowChecklist(!showChecklist); // Toggle checklist visibility
@@ -87,6 +95,12 @@ const Card = ({ task, updateTaskStatus, toggleCloseModal, collapseAll }) => {
         toggleCloseModal(taskId); // Open delete modal with taskId
     };
 
+    const handleEditClick = () => {
+        setEditedTask(task); // Set the task data to be edited
+        setEditModalOpen(true); // Open the edit modal
+        toggleOptions(); // Close options menu
+    };
+
     // Function to render the mode buttons based on the current status
     const renderModeButtons = () => {
         switch (status) {
@@ -128,55 +142,63 @@ const Card = ({ task, updateTaskStatus, toggleCloseModal, collapseAll }) => {
     };
 
     return (
-        <div className={styles.card}>
-            <div className={styles.header}>
-                <div className={styles.priorityDiv}>
-                    <div className={styles.colorDiv} style={{ backgroundColor: getPriorityColor(priority) }}></div>
-                    <div className={styles.priorityIndicator}>{priority} Priority</div>
-                </div>
-                <div className={styles.optionsMenu}>
-                    <div className={styles.dots} onClick={toggleOptions}>
-                        <img src={dotLogo} alt='dot logo' />
+        <>
+            <div className={styles.card}>
+                <div className={styles.header}>
+                    <div className={styles.priorityDiv}>
+                        <div className={styles.colorDiv} style={{ backgroundColor: getPriorityColor(priority) }}></div>
+                        <div className={styles.priorityIndicator}>{priority} Priority</div>
+                    </div>
+                    <div className={styles.optionsMenu}>
+                        <div className={styles.dots} onClick={toggleOptions}>
+                            <img src={dotLogo} alt='dot logo' />
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className={styles.optionsDiv}>
-                {showOptions && (
-                    <div className={styles.options}>
-                        <div className={styles.optionBtn}>Edit</div>
-                        <div className={styles.optionBtn}>Share</div>
-                        <div className={styles.optionBtnDelete} onClick={handleDeleteClick}>Delete</div>
+                <div className={styles.optionsDiv}>
+                    {showOptions && (
+                        <div className={styles.options}>
+                            <div className={styles.optionBtn} onClick={handleEditClick}>Edit</div>
+                            <div className={styles.optionBtn}>Share</div>
+                            <div className={styles.optionBtnDelete} onClick={handleDeleteClick}>Delete</div>
+                        </div>
+                    )}
+                </div>
+                <div className={styles.title}>{title}</div>
+                <div className={styles.checklist}>
+                    <div className={styles.checklistData}>
+                        Checklist ({checkedTasks}/{totalTasks})
+                    </div>
+                    <div className={styles.collapseImg} onClick={toggleChecklist}>
+                        <img src={collapseIcon} alt='collapse icon' />
+                    </div>
+                </div>
+                {showChecklist && (
+                    <div className={styles.checklistInput}>
+                        {taskChecklist.map((task, index) => (
+                            <div key={index} className={styles.taskItem}>
+                                <input
+                                    type="checkbox"
+                                    checked={task.isChecked}
+                                    onChange={() => handleChecklistToggle(index)}
+                                    className={styles.checkBox}
+                                />
+                                <span>{task.text}</span>
+                            </div>
+                        ))}
                     </div>
                 )}
-            </div>
-            <div className={styles.title}>{title}</div>
-            <div className={styles.checklist}>
-                <div className={styles.checklistData}>
-                    Checklist ({checkedTasks}/{totalTasks})
-                </div>
-                <div className={styles.collapseImg} onClick={toggleChecklist}>
-                    <img src={collapseIcon} alt='collapse icon' />
+                <div className={styles.modesBtn}>
+                    {renderModeButtons()}
                 </div>
             </div>
-            {showChecklist && (
-                <div className={styles.checklistInput}>
-                    {taskChecklist.map((task, index) => (
-                        <div key={index} className={styles.taskItem}>
-                            <input
-                                type="checkbox"
-                                checked={task.isChecked}
-                                onChange={() => handleChecklistToggle(index)}
-                                className={styles.checkBox}
-                            />
-                            <span>{task.text}</span>
-                        </div>
-                    ))}
-                </div>
-            )}
-            <div className={styles.modesBtn}>
-                {renderModeButtons()}
-            </div>
-        </div>
+            <ToDoEditModal
+                isOpen={editModalOpen}
+                closeModal={() => setEditModalOpen(false)}
+                task={editedTask}
+                onTaskAdded={onTaskAdded}
+            />
+        </>
     );
 };
 

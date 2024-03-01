@@ -62,9 +62,9 @@
 
 .passwordToggle, .newPasswordToggle{
     position: relative;
-    height: 25px;
-    right: 30px;
-    top: 10px;
+    height: 20px;
+    right: 32px;
+    top: 12px;
 }
 
 .btnDiv{

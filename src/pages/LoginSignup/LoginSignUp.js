@@ -245,7 +245,7 @@ function LoginSignup() {
                                     onChange={(e) => setPassword(e.target.value)}
                                     className={styles.formInput}
                                 />
-                                <img src={showLoginPassword ? eyeIcon : eyeSlashIcon} alt="eye icon" className={styles.loginPasswordToggle} onClick={toggleLoginPassword} />
+                                <img src={showLoginPassword ? eyeSlashIcon : eyeIcon} alt="eye icon" className={styles.loginPasswordToggle} onClick={toggleLoginPassword} />
                             </div>
                             <button type="submit" className={styles.signUpBtn}>
                                 {isLoginLoading ? "Loading..." : "Log in"}
@@ -300,7 +300,7 @@ function LoginSignup() {
                                     // required
                                     className={styles.formInput}
                                 />
-                                <img src={showPassword ? eyeIcon : eyeSlashIcon} alt="eye icon" className={styles.passwordToggle} onClick={togglePassword} />
+                                <img src={showPassword ? eyeSlashIcon : eyeIcon} alt="eye icon" className={styles.passwordToggle} onClick={togglePassword} />
 
                             </div>
                             <div className={styles.formAttribute}>
@@ -315,7 +315,7 @@ function LoginSignup() {
                                     // required
                                     className={styles.formInput}
                                 />
-                                <img src={showConfirmPassword ? eyeIcon : eyeSlashIcon} alt="eye icon" className={styles.confirmPasswordToggle} onClick={toggleConfirmPassword} />
+                                <img src={showConfirmPassword ? eyeSlashIcon : eyeIcon} alt="eye icon" className={styles.confirmPasswordToggle} onClick={toggleConfirmPassword} />
 
                             </div>
                             <button type="submit" className={styles.signUpBtn} >

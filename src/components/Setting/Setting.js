@@ -143,7 +143,7 @@ function SettingContent() {
                         onChange={(e) => setOldPassword(e.target.value)}
                         className={styles.formInput}
                     />
-                    <img src={showPassword ? eyeIcon : eyeSlashIcon} alt="eye icon" className={styles.passwordToggle} onClick={togglePassword} />
+                    <img src={showPassword ? eyeSlashIcon : eyeIcon} alt="eye icon" className={styles.passwordToggle} onClick={togglePassword} />
 
                 </div>
                 <div className={styles.formAttribute}>
@@ -156,7 +156,7 @@ function SettingContent() {
                         onChange={(e) => setNewPassword(e.target.value)}
                         className={styles.formInput}
                     />
-                    <img src={showNewPassword ? eyeIcon : eyeSlashIcon} alt="eye icon" className={styles.newPasswordToggle} onClick={toggleNewPassword} />
+                    <img src={showNewPassword ? eyeSlashIcon : eyeIcon} alt="eye icon" className={styles.newPasswordToggle} onClick={toggleNewPassword} />
                 </div>
                 <div className={styles.btnDiv}>
                     <button onClick={handleUpdatePassword} disabled={isLoading} className={styles.updateBtn}>

@@ -5,6 +5,9 @@ import collapseDownIcon from "../../assets/images/collapsedown.svg"
 import collapseUpIcon from "../../assets/images/collapseup.svg"
 import ToDoEditModal from '../ToDoEditModal/ToDoEditModal';
 import { BACKEND_URL } from '../../constants/baseurl';
+import { FRONTEND_URL } from '../../constants/baseurl';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axios from 'axios';
 
 const Card = ({ task, updateTaskStatus, toggleCloseModal, collapseAll, onTaskAdded }) => {
@@ -15,6 +18,7 @@ const Card = ({ task, updateTaskStatus, toggleCloseModal, collapseAll, onTaskAdd
     const [collapseIcon, setCollapseIcon] = useState(collapseDownIcon);
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [editedTask, setEditedTask] = useState(null);
+    const [shareLink, setShareLink] = useState('');
 
     const checkedTasks = taskChecklist.filter(task => task.isChecked).length; // Updated to use taskChecklist
     const totalTasks = taskChecklist.length; // Updated to use taskChecklist
@@ -97,6 +101,14 @@ const Card = ({ task, updateTaskStatus, toggleCloseModal, collapseAll, onTaskAdd
         toggleOptions(); // Close options menu
     };
 
+    const handleShareClick = () => {
+        localStorage.setItem('sharedTask', JSON.stringify(task));
+        const shareableLink = `${FRONTEND_URL}/task/${taskId}`;
+        // setShareLink(shareableLink);
+        toggleOptions();
+        navigator.clipboard.writeText(shareableLink);
+        toast.success('Link copied to clipboard!');
+    };
     // Function to render the mode buttons based on the current status
     const renderModeButtons = () => {
         switch (status) {
@@ -155,7 +167,7 @@ const Card = ({ task, updateTaskStatus, toggleCloseModal, collapseAll, onTaskAdd
                     {showOptions && (
                         <div className={styles.options}>
                             <div className={styles.optionBtn} onClick={handleEditClick}>Edit</div>
-                            <div className={styles.optionBtn}>Share</div>
+                            <div className={styles.optionBtn} onClick={handleShareClick}>Share</div>
                             <div className={styles.optionBtnDelete} onClick={handleDeleteClick}>Delete</div>
                         </div>
                     )}
@@ -184,7 +196,11 @@ const Card = ({ task, updateTaskStatus, toggleCloseModal, collapseAll, onTaskAdd
                         ))}
                     </div>
                 )}
+                <div>
+
+                </div>
                 <div className={styles.modesBtn}>
+                <div className={styles.dueDateDiv}>{task.dueDate}</div>
                     {renderModeButtons()}
                 </div>
             </div>
@@ -194,6 +210,7 @@ const Card = ({ task, updateTaskStatus, toggleCloseModal, collapseAll, onTaskAdd
                 task={editedTask}
                 onTaskAdded={onTaskAdded}
             />
+            <ToastContainer />
         </>
     );
 };

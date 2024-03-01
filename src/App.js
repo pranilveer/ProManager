@@ -5,6 +5,7 @@ import LoginSignup from './pages/LoginSignup/LoginSignUp';
 import Dashboard from './pages/Dashboard';
 import Analytics from './pages/Analytics';
 import Setting from './pages/Setting';
+import CardPublish from './components/CardPublish/CardPublish'
 import { isAuthenticated } from "./constants/auth";
 
 function PrivateRoute({ element, redirectTo }) {
@@ -33,6 +34,10 @@ function App() {
           <Route path="/setting" element={
             <PrivateRoute element={isAuthenticated ? <Setting /> : <Navigate to="/" />} />
           } />
+          <Route path="/task/:id" element={ 
+          <PrivateRoute element={isAuthenticated ? <CardPublish /> : <Navigate to="/" />} />
+          } />
+
         </Routes>
       </div>
     </BrowserRouter>

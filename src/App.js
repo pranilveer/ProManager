@@ -34,9 +34,7 @@ function App() {
           <Route path="/setting" element={
             <PrivateRoute element={isAuthenticated ? <Setting /> : <Navigate to="/" />} />
           } />
-          <Route path="/task/:id" element={ 
-          <PrivateRoute element={isAuthenticated ? <CardPublish /> : <Navigate to="/" />} />
-          } />
+          <Route path="/task/:id" element={<CardPublish />} />
 
         </Routes>
       </div>

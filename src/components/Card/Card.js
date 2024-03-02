@@ -18,7 +18,6 @@ const Card = ({ task, updateTaskStatus, toggleCloseModal, collapseAll, onTaskAdd
     const [collapseIcon, setCollapseIcon] = useState(collapseDownIcon);
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [editedTask, setEditedTask] = useState(null);
-    const [shareLink, setShareLink] = useState('');
 
     const checkedTasks = taskChecklist.filter(task => task.isChecked).length; // Updated to use taskChecklist
     const totalTasks = taskChecklist.length; // Updated to use taskChecklist
@@ -101,14 +100,34 @@ const Card = ({ task, updateTaskStatus, toggleCloseModal, collapseAll, onTaskAdd
         toggleOptions(); // Close options menu
     };
 
-    const handleShareClick = () => {
-        localStorage.setItem('sharedTask', JSON.stringify(task));
-        const shareableLink = `${FRONTEND_URL}/task/${taskId}`;
-        // setShareLink(shareableLink);
-        toggleOptions();
-        navigator.clipboard.writeText(shareableLink);
-        toast.success('Link copied to clipboard!');
+    const handleCopyLink = () => {
+        if (taskId) {
+            const shareableLink = `${FRONTEND_URL}/task/${taskId}`;
+            navigator.clipboard
+                .writeText(shareableLink)
+                .then(() => {
+                    toggleOptions();
+                })
+                .catch((err) => {
+                    console.error("Failed to copy quiz link: ", err);
+                });
+        }
+        toast.success("Link copied to Clipboard", {
+            position: "top-right",
+            autoClose: 1400,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
     };
+
+
+
+
+
     // Function to render the mode buttons based on the current status
     const renderModeButtons = () => {
         switch (status) {
@@ -167,7 +186,7 @@ const Card = ({ task, updateTaskStatus, toggleCloseModal, collapseAll, onTaskAdd
                     {showOptions && (
                         <div className={styles.options}>
                             <div className={styles.optionBtn} onClick={handleEditClick}>Edit</div>
-                            <div className={styles.optionBtn} onClick={handleShareClick}>Share</div>
+                            <div className={styles.optionBtn} onClick={handleCopyLink}>Share</div>
                             <div className={styles.optionBtnDelete} onClick={handleDeleteClick}>Delete</div>
                         </div>
                     )}

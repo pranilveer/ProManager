@@ -167,20 +167,21 @@ const ToDoEditModal = ({ isOpen, closeModal, onTaskAdded, task }) => {
                     </div>
                 </div>
                 <div className={styles.buttonDiv}>
-                    {showCalendar && (
-                        <DatePicker
-                            showIcon
-                            selected={dueDate}
-                            onChange={handleDateChange}
-                            icon="fa fa-calender"
-                        />
-                    )}
                     <button onClick={toggleCalendar} className={styles.dueDateBtn}>Select Due Date</button>
                     <div className={styles.saveCancelBtn}>
                         <button onClick={closeModal} className={styles.cancelBtn}>Cancel</button>
                         <button onClick={handleEdit} className={styles.saveBtn}>Save</button>
                     </div>
                 </div>
+            </div>
+            <div className={styles.dateDiv}>
+                {showCalendar && (
+                <DatePicker
+                    selected={dueDate}
+                    onChange={handleDateChange}
+                    inline
+                />
+            )}
             </div>
             <ToastContainer />
         </div >

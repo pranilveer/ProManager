@@ -14,7 +14,6 @@ const ToDoModal = ({ isOpen, closeModal, onTaskAdded }) => {
     const [dueDate, setDueDate] = useState(new Date());
     const [selectedChecklist, setSelectedChecklist] = useState(0);
     const [showCalendar, setShowCalendar] = useState(false);
-    // const [tasks, setTasks] = useState([]);
 
     const handleChange = (e) => {
         setShowCalendar(!showCalendar);
@@ -22,10 +21,6 @@ const ToDoModal = ({ isOpen, closeModal, onTaskAdded }) => {
     };
     const handleClick = (e) => {
         e.preventDefault();
-        setShowCalendar(!showCalendar);
-    };
-
-    const toggleCalendar = () => {
         setShowCalendar(!showCalendar);
     };
 
@@ -90,6 +85,10 @@ const ToDoModal = ({ isOpen, closeModal, onTaskAdded }) => {
         );
         onTaskAdded();
         closeModal();
+        setTitle('');
+        setPriority('');
+        setChecklist([]);
+        setDueDate(new Date());
     };
 
     return (
